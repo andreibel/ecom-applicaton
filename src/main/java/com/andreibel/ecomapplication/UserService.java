@@ -1,41 +1,37 @@
 package com.andreibel.ecomapplication;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
 
     public List<User> fetchAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     public void addUser(User user) {
-        user.setId((long) (users.size() + 1)); // Simple ID generation
-        users.add(user);
-
+        userRepository.save(user);
     }
 
     public Optional<User> getUser(Long id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+        return userRepository.findById(id);
     }
 
 
     public boolean updateUser(Long id, User updatedUser) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
+        return userRepository.findById(id)
                 .map(user -> {
                     user.setFirstName(updatedUser.getFirstName());
                     user.setLastName(updatedUser.getLastName());
+                    userRepository.save(user);
                     return true;
                 })
                 .orElse(false);
