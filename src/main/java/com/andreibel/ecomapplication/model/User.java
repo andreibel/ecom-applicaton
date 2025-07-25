@@ -1,4 +1,4 @@
-package com.andreibel.ecomapplication;
+package com.andreibel.ecomapplication.model;
 
 
 import jakarta.persistence.Entity;
@@ -13,12 +13,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "user_table")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
+    private String email;
+    private String phone;
+    private UserRule userRule = UserRule.CUSTOMER;
 }
 

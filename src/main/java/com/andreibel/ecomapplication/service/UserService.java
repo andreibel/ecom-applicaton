@@ -1,7 +1,10 @@
-package com.andreibel.ecomapplication;
+package com.andreibel.ecomapplication.service;
 
+import com.andreibel.ecomapplication.repository.UserRepository;
+import com.andreibel.ecomapplication.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-
+    @Transactional
     public boolean updateUser(Long id, User updatedUser) {
         return userRepository.findById(id)
                 .map(user -> {

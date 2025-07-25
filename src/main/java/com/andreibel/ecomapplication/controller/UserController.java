@@ -1,5 +1,7 @@
-package com.andreibel.ecomapplication;
+package com.andreibel.ecomapplication.controller;
 
+import com.andreibel.ecomapplication.model.User;
+import com.andreibel.ecomapplication.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
