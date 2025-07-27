@@ -2,14 +2,12 @@ package com.andreibel.ecomapplication.controller;
 
 import com.andreibel.ecomapplication.DTO.UserRequest;
 import com.andreibel.ecomapplication.DTO.UserResponse;
-import com.andreibel.ecomapplication.model.User;
 import com.andreibel.ecomapplication.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 
 @RestController
@@ -24,7 +22,6 @@ public class UserController {
         return ResponseEntity.ok(userService.fetchAllUsers());
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
         return userService.getUser(id).map(ResponseEntity::ok)
@@ -32,7 +29,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id,  @RequestBody UserRequest userRequest) {
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         return userService.updateUser(id, userRequest) ?
                 ResponseEntity.ok("User updated successfully") :
                 ResponseEntity.notFound().build();
