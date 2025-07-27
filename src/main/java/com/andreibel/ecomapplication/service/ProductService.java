@@ -21,21 +21,19 @@ public class ProductService {
         Product product = new Product();
         updateProductFromRequest(product, productRequest);
         Product savedProduct = productRepository.save(product);
-
         return MapToProductResponse(savedProduct);
     }
 
     private ProductResponse MapToProductResponse(Product sp) {
-        ProductResponse pr = new ProductResponse();
-        pr.setId(sp.getId());
-        pr.setName(sp.getName());
-        pr.setDescription(sp.getDescription());
-        pr.setPrice(sp.getPrice());
-        pr.setStockQuantity(sp.getStockQuantity());
-        pr.setCategory(sp.getCategory());
-        pr.setImageUrl(sp.getImageUrl());
-        pr.setActive(sp.getActive());
-        return pr;
+        return ProductResponse.builder()
+                .id(sp.getId()).name(sp.getName())
+                .description(sp.getDescription())
+                .price(sp.getPrice())
+                .stockQuantity(sp.getStockQuantity())
+                .category(sp.getCategory())
+                .imageUrl(sp.getImageUrl())
+                .active(sp.getActive())
+                .build();
     }
 
     private void updateProductFromRequest(Product p, ProductRequest pr) {
