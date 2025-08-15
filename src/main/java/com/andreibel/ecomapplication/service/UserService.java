@@ -1,9 +1,8 @@
 package com.andreibel.ecomapplication.service;
 
-import com.andreibel.ecomapplication.DTO.AddressDTO;
-import com.andreibel.ecomapplication.DTO.UserRequest;
-import com.andreibel.ecomapplication.DTO.UserResponse;
-import com.andreibel.ecomapplication.model.Address;
+import com.andreibel.ecomapplication.DTO.UserRequestDTO;
+import com.andreibel.ecomapplication.DTO.UserResponseDTO;
+import com.andreibel.ecomapplication.mapper.UserMapper;
 import com.andreibel.ecomapplication.model.User;
 import com.andreibel.ecomapplication.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,78 +13,72 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+/**
+ * Service class for handling user-related business logic.
+ * Provides methods for creating, retrieving, and updating users.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    /**
+     * Repository for accessing user data from the database.
+     */
     private final UserRepository userRepository;
 
-    public List<UserResponse> fetchAllUsers() {
-        return userRepository
-                .findAll()
-                .stream()
-                .map(this::mapToUserResponse)
-                .collect(Collectors.toList());
+    /**
+     * Retrieves all users from the database and maps them to UserResponseDTOs.
+     *
+     * @return List of UserResponseDTO objects representing all users
+     */
+    public List<UserResponseDTO> fetchAllUsers() {
+        return userRepository.findAll().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
-    public void addUser(UserRequest user) {
+    /**
+     * Adds a new user to the database using the provided UserRequestDTO.
+     *
+     * @param user the UserRequestDTO containing user data to add
+     */
+    public void addUser(UserRequestDTO user) {
         User newUser = new User();
-        mapToUser(newUser, user);
+        UserMapper.mapToUser(newUser, user);
         userRepository.save(newUser);
     }
 
-    public Optional<UserResponse> getUser(Long id) {
-        return userRepository.findById(id).map(this::mapToUserResponse);
+    /**
+     * Retrieves a user by ID and maps it to a UserResponseDTO.
+     *
+     * @param id the ID of the user to retrieve
+     * @return Optional containing the UserResponseDTO if found, or empty if not found
+     */
+    public Optional<UserResponseDTO> getUser(Long id) {
+        return userRepository.findById(id).map(UserMapper::mapToUserResponse);
     }
 
+    /**
+     * Updates an existing user by ID with new data from UserRequestDTO.
+     * The operation is transactional to ensure data consistency.
+     *
+     * @param id             the ID of the user to update
+     * @param userRequestDTO the new user data
+     * @return true if the user was found and updated, false otherwise
+     */
     @Transactional
-    public boolean updateUser(Long id, UserRequest updatedUser) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    mapToUser(user, updatedUser);
-                    userRepository.save(user);
-                    return true;
-                })
-                .orElse(false);
-
-    }
-
-    private UserResponse mapToUserResponse(User u) {
-        UserResponse us = new UserResponse();
-        us.setId(u.getId().toString());
-        us.setFirstName(u.getFirstName());
-        us.setLastName(u.getLastName());
-        us.setEmail(u.getEmail());
-        us.setPhone(u.getPhone());
-        us.setUserRule(u.getUserRule());
-        if (u.getAddress() != null) {
-            AddressDTO addressDTO = new AddressDTO();
-            addressDTO.setId(u.getAddress().getId().toString());
-            addressDTO.setStreet(u.getAddress().getStreet());
-            addressDTO.setCity(u.getAddress().getCity());
-            addressDTO.setState(u.getAddress().getState());
-            addressDTO.setCountry(u.getAddress().getCountry());
-            addressDTO.setZipCode(u.getAddress().getZipCode());
-            us.setAddress(addressDTO);
+    public boolean updateUser(Long id, UserRequestDTO userRequestDTO) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        if (existingUser == null) {
+            return false; // User not found, return false
         }
-        return us;
-    }
-    private void mapToUser(User user, UserRequest userRequest) {
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setEmail(userRequest.getEmail());
-        user.setPhone(userRequest.getPhone());
-
-        if (userRequest.getAddress() != null) {
-            Address address = new Address();
-            address.setCity(userRequest.getAddress().getCity());
-            address.setState(userRequest.getAddress().getState());
-            address.setCountry(userRequest.getAddress().getCountry());
-            address.setZipCode(userRequest.getAddress().getZipCode());
-            address.setStreet(userRequest.getAddress().getStreet());
-
-            user.setAddress(address);
+        // Check if the email is already used by another user
+        if (userRepository.existsByEmailAndIdNot(userRequestDTO.email(), id)) {
+            throw new IllegalArgumentException("Email already exists: " + userRequestDTO.email());
         }
+        return userRepository.findById(id).map(user -> {
+            UserMapper.mapToUser(user, userRequestDTO);
+            userRepository.save(user);
+            return true;
+        }).orElse(false);
+
     }
 }

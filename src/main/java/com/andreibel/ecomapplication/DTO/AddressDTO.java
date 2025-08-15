@@ -1,17 +1,17 @@
 package com.andreibel.ecomapplication.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.andreibel.ecomapplication.model.Address;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AddressDTO {
-    private String id;
-    private String street;
-    private String city;
-    private String state;
-    private String country;
-    private String zipCode;
+import java.io.Serializable;
+
+/**
+ * DTO for {@link Address}
+ */
+public record AddressDTO(@NotNull @NotBlank(message = "need name of street") String street,
+                         @NotNull @NotBlank(message = "need name of city") String city,
+                         @NotNull @NotBlank(message = "need name of state") String state,
+                         @NotNull @NotBlank(message = "need name of  contry") String country,
+                         @NotNull @NotBlank(message = "need zip code ") String zipCode) implements Serializable {
 }
