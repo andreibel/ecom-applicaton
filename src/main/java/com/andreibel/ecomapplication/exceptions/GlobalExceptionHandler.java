@@ -29,4 +29,11 @@ public class GlobalExceptionHandler {
         error.put("message", "Email address already exists");
         return ResponseEntity.status(409).body(error); // 409 Conflict
     }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePatientNotFoundException(UserNotFoundException ex) {
+        log.warn("Patient not found: {}", ex.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("message", "Patient not found");
+        return ResponseEntity.status(404).body(error); // 404 Not Found
+    }
 }

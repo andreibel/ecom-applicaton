@@ -2,6 +2,7 @@ package com.andreibel.ecomapplication.controller;
 
 import com.andreibel.ecomapplication.DTO.UserRequestDTO;
 import com.andreibel.ecomapplication.DTO.UserResponseDTO;
+import com.andreibel.ecomapplication.exceptions.UserNotFoundException;
 import com.andreibel.ecomapplication.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
         return userService.getUser(id).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
     }
 
     /**

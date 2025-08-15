@@ -1,7 +1,7 @@
 package com.andreibel.ecomapplication.controller;
 
-import com.andreibel.ecomapplication.DTO.ProductRequest;
-import com.andreibel.ecomapplication.DTO.ProductResponse;
+import com.andreibel.ecomapplication.DTO.ProductRequestDTO;
+import com.andreibel.ecomapplication.DTO.ProductResponseDTO;
 import com.andreibel.ecomapplication.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class ProductController {
      * @return ResponseEntity containing the created product and HTTP status 201
      */
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequest) {
         return new ResponseEntity<>(productService.createProduct(productRequest), HttpStatus.CREATED);
     }
 
@@ -44,8 +44,8 @@ public class ProductController {
      * @return ResponseEntity containing the updated product or 404 if not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
-                                                         @Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
+                                                         @Valid @RequestBody ProductRequestDTO productRequest) {
         return productService.updateProduct(id, productRequest)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -57,12 +57,13 @@ public class ProductController {
      * @return ResponseEntity containing the list of all products
      */
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProduct() {
+    public ResponseEntity<List<ProductResponseDTO>> getAllProduct() {
         return ResponseEntity.ok(productService.getProducts());
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return productService.deleteProduct(id) ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

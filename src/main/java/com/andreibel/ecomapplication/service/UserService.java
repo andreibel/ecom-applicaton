@@ -75,7 +75,7 @@ public class UserService {
         if (userRepository.existsByEmailAndIdNot(userRequestDTO.email(), id)) {
             throw new EmailAlreadyExistsException("Email already exists: " + userRequestDTO.email());
         }
-        return userRepository.findById(id).map(user -> {
+        userRepository.findById(id).map(user -> {
             UserMapper.mapToUser(user, userRequestDTO);
             userRepository.save(user);
             return true;
