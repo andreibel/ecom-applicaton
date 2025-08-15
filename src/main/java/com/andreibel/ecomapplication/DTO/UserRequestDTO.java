@@ -1,5 +1,6 @@
 package com.andreibel.ecomapplication.DTO;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,5 +16,5 @@ public record UserRequestDTO(@NotNull @NotBlank(message = "need first name") Str
                              @NotNull @Email(message = "need current Email") String email,
                              @NotNull @Pattern(message = "need correct phone number ", regexp = "^\\+?[1-9]\\d{1,14}$")
                              @NotBlank(message = "need phone number ") String phone,
-                             @NotNull(message = "need address") AddressDTO address) implements Serializable {
+                             @Valid @NotNull(message = "need address") AddressDTO address) implements Serializable {
 }

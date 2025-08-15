@@ -2,6 +2,7 @@ package com.andreibel.ecomapplication.service;
 
 import com.andreibel.ecomapplication.DTO.UserRequestDTO;
 import com.andreibel.ecomapplication.DTO.UserResponseDTO;
+import com.andreibel.ecomapplication.exceptions.EmailAlreadyExistsException;
 import com.andreibel.ecomapplication.mapper.UserMapper;
 import com.andreibel.ecomapplication.model.User;
 import com.andreibel.ecomapplication.repository.UserRepository;
@@ -40,8 +41,12 @@ public class UserService {
      *
      * @param user the UserRequestDTO containing user data to add
      */
+    @Transactional
     public void addUser(UserRequestDTO user) {
         User newUser = new User();
+        if (userRepository.existsByEmail(user.email())) {
+            throw new EmailAlreadyExistsException("Email already exists: " + user.email());
+        }
         UserMapper.mapToUser(newUser, user);
         userRepository.save(newUser);
     }
@@ -66,13 +71,9 @@ public class UserService {
      */
     @Transactional
     public boolean updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User existingUser = userRepository.findById(id).orElse(null);
-        if (existingUser == null) {
-            return false; // User not found, return false
-        }
         // Check if the email is already used by another user
         if (userRepository.existsByEmailAndIdNot(userRequestDTO.email(), id)) {
-            throw new IllegalArgumentException("Email already exists: " + userRequestDTO.email());
+            throw new EmailAlreadyExistsException("Email already exists: " + userRequestDTO.email());
         }
         return userRepository.findById(id).map(user -> {
             UserMapper.mapToUser(user, userRequestDTO);

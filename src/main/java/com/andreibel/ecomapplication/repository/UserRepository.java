@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndIdNot(@NotNull @Email(message = "need current Email") String email, Long id);
+
+    boolean existsByEmail(@NotNull @Email(message = "need current Email") String email);
 }
+

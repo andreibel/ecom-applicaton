@@ -105,10 +105,13 @@ public class ProductService {
                 });
     }
 
-    public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        product.setActive(false);
-        productRepository.save(product);
+    public boolean deleteProduct(Long id) {
+        return productRepository.findById(id).map(
+                product -> {
+                    product.setActive(false);
+                    saveProduct(product);
+                    return true;
+                }
+        ).orElse(false);
     }
 }
