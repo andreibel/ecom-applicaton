@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  * Service class for handling product-related business logic.
- * Provides methods for creating, updating, and retrieving products.
+ * Provides methods for creating, updating, retrieving, deleting, and searching products.
  */
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class ProductService {
      * Creates a new product from the given request data.
      *
      * @param productRequest the product data to create
-     * @return ProductResponse containing the created product's details
+     * @return ProductResponseDTO containing the created product's details
      */
     public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
         Product product = new Product();
@@ -47,9 +47,9 @@ public class ProductService {
     }
 
     /**
-     * Retrieves all products from the database.
+     * Retrieves all active products from the database.
      *
-     * @return List of ProductResponse DTOs for all products
+     * @return List of ProductResponseDTOs for all active products
      */
     public List<ProductResponseDTO> getProducts() {
         List<Product> products = productRepository.findByActiveTrue();
@@ -63,7 +63,7 @@ public class ProductService {
      *
      * @param id             the ID of the product to update
      * @param productRequest the new product data
-     * @return Optional containing the updated ProductResponse, or empty if not found
+     * @return Optional containing the updated ProductResponseDTO, or empty if not found
      */
     public Optional<ProductResponseDTO> updateProduct(Long id, ProductRequestDTO productRequest) {
         return productRepository.findById(id)
@@ -73,6 +73,13 @@ public class ProductService {
                 });
     }
 
+    /**
+     * Soft deletes a product by setting its active flag to false.
+     * If the product with the given ID exists, it is marked as inactive and saved.
+     *
+     * @param id the ID of the product to delete
+     * @return true if the product was found and marked as inactive, false otherwise
+     */
     public boolean deleteProduct(Long id) {
         return productRepository.findById(id).map(
                 product -> {
@@ -81,5 +88,18 @@ public class ProductService {
                     return true;
                 }
         ).orElse(false);
+    }
+
+    /**
+     * Searches for products matching the given keyword.
+     * Returns a list of ProductResponseDTOs for products that match the search criteria.
+     *
+     * @param keyword the search keyword
+     * @return List of ProductResponseDTOs matching the keyword
+     */
+    public List<ProductResponseDTO> searchProducts(String keyword) {
+        return productRepository.searchProduct(keyword).stream()
+                .map(ProductMapper::MapToProductResponse)
+                .toList();
     }
 }

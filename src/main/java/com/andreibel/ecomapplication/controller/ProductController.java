@@ -45,7 +45,7 @@ public class ProductController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
-                                                         @Valid @RequestBody ProductRequestDTO productRequest) {
+                                                            @Valid @RequestBody ProductRequestDTO productRequest) {
         return productService.updateProduct(id, productRequest)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -60,10 +60,16 @@ public class ProductController {
     public ResponseEntity<List<ProductResponseDTO>> getAllProduct() {
         return ResponseEntity.ok(productService.getProducts());
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return productService.deleteProduct(id) ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponseDTO>> searchProducts(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProducts(keyword));
     }
 }
