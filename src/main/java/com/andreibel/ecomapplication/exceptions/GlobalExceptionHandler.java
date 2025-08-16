@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
         });
         return ResponseEntity.badRequest().body(errors);
     }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
         log.warn("Email already exists: {}", ex.getMessage());
@@ -29,11 +30,28 @@ public class GlobalExceptionHandler {
         error.put("message", "Email address already exists");
         return ResponseEntity.status(409).body(error); // 409 Conflict
     }
+
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handlePatientNotFoundException(UserNotFoundException ex) {
-        log.warn("Patient not found: {}", ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex) {
+        log.warn("User not found: {}", ex.getMessage());
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Patient not found");
+        error.put("message", "User not found");
         return ResponseEntity.status(404).body(error); // 404 Not Found
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleProductNotFoundException(ProductNotFoundException ex) {
+        log.warn("Product not found: {}", ex.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("message", "Product not found");
+        return ResponseEntity.status(404).body(error); // 404 Not Found
+    }
+
+    @ExceptionHandler(NotEnoughProductException.class)
+    public ResponseEntity<Map<String, String>> handleNotEnoughProductException(NotEnoughProductException ex) {
+        log.warn("Not enough product in stock: {}", ex.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("message", "Not enough product in stock");
+        return ResponseEntity.status(400).body(error); // 400 Bad Request
     }
 }

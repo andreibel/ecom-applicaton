@@ -1,15 +1,11 @@
 package com.andreibel.ecomapplication.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity(name = "products")
@@ -22,19 +18,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @Column(nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private String description;
-    @NotNull
-    private Double price;
-    @NotNull
+    @Column(nullable = false)
+    private BigDecimal price;
+    @Column(nullable = false)
     private Integer stockQuantity;
-    @NotNull
+    @Column(nullable = false)
     private String category;
-    @NotNull
+    @Column(nullable = false)
     private String imageUrl;
-    @NotNull
+    @Column(nullable = false)
     private Boolean active = true;
     @CreationTimestamp
     private LocalDateTime createAt;

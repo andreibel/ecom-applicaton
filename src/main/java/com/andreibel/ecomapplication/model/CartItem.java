@@ -1,7 +1,6 @@
 package com.andreibel.ecomapplication.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,9 +29,10 @@ public class CartItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @NotNull
+    @Column(nullable = false)
+    
     private Integer quantity;
-    @NotNull
+    @Column(nullable = false)
     private BigDecimal totalPrice;
 
     @CreationTimestamp
