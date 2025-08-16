@@ -40,4 +40,8 @@ public class CartItem {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "oder_id")
+    private Oder oder;
+
 }
