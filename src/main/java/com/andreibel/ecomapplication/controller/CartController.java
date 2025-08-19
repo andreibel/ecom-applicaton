@@ -35,7 +35,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<List<CartItem>> getCartItems(@RequestHeader("X-User-ID") Long userId) {
-        return ResponseEntity.ok(cartService.getCartItems(userId));
+        return ResponseEntity.ok(cartService.getCart(userId));
     }
 
 }

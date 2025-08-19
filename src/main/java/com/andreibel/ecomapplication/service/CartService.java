@@ -49,7 +49,7 @@ public class CartService {
         cartItemRepository.findByUserAndProduct(user, product).map(
                 cartItem -> {
                     cartItem.setQuantity(cartItem.getQuantity() + request.quantity());
-                    cartItem.setTotalPrice(cartItem.getTotalPrice().add(product.getPrice().multiply(BigDecimal.valueOf(request.quantity()))));
+                    cartItem.setPrice(cartItem.getPrice().add(product.getPrice().multiply(BigDecimal.valueOf(request.quantity()))));
                     return cartItemRepository.save(cartItem);
                 }
         ).orElseGet(
@@ -58,7 +58,7 @@ public class CartService {
                     newCartItem.setUser(user);
                     newCartItem.setProduct(product);
                     newCartItem.setQuantity(request.quantity());
-                    newCartItem.setTotalPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
+                    newCartItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.quantity())));
                     return cartItemRepository.save(newCartItem);
                 }
         );
@@ -75,8 +75,18 @@ public class CartService {
         }
     }
 
-    public List<CartItem> getCartItems(Long userId) {
+    public List<CartItem> getCart(Long userId) {
         return userRepository.findById(userId).map(cartItemRepository::findByUser)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+    // Retrieves the cart items for a specific user by their ID. and not throw error if the user is not found
+    // If the user is not found, it returns an empty list instead of throwing an exception
+    public List<CartItem> getCartById(Long userId) {
+        return cartItemRepository.findByUser_Id(userId);
+    }
+
+
+    public void clearCart(Long userId) {
+        cartItemRepository.deleteByUser_Id(userId);
     }
 }

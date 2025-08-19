@@ -15,9 +15,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "oder")
+@Table(name = "orders")
 @NoArgsConstructor
-public class Oder {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -26,7 +26,7 @@ public class Oder {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.PENDING;
 
-    @OneToMany(mappedBy = "oder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private BigDecimal totalAmout;

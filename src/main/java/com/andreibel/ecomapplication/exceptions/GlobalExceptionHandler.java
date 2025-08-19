@@ -54,4 +54,11 @@ public class GlobalExceptionHandler {
         error.put("message", "Not enough product in stock");
         return ResponseEntity.status(400).body(error); // 400 Bad Request
     }
+    @ExceptionHandler(CartIsEmptyException.class)
+    public ResponseEntity<Map<String, String>> handleCartIsEmptyException(CartIsEmptyException ex) {
+        log.warn("Cart is empty: {}", ex.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("message", "Cart is empty, cannot create order");
+        return ResponseEntity.status(400).body(error); // 404 Not Found
+    }
 }

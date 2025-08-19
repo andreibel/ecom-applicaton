@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity(name = "cart_items")
+//@Table(name = "cart_items")
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,7 +35,7 @@ public class CartItem {
     
     private Integer quantity;
     @Column(nullable = false)
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -42,6 +44,6 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "oder_id")
-    private Oder oder;
+    private Order order;
 
 }

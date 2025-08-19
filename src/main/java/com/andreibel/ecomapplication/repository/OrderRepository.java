@@ -1,9 +1,9 @@
 package com.andreibel.ecomapplication.repository;
 
-import com.andreibel.ecomapplication.model.Oder;
+import com.andreibel.ecomapplication.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OderRepository extends JpaRepository<Oder, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }
